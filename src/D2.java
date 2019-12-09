@@ -1,4 +1,7 @@
 import java.util.*;
+
+import utils.Prog;
+
 import static java.lang.Math.*; 
 import static java.util.Arrays.*;
 
@@ -11,7 +14,7 @@ import static java.lang.Double.*;
 public class D2 {
 
 	Scanner scan = new Scanner(System.in);
-	ArrayList<Integer>A;
+	String program;
 	
 	
 	void run(ArrayList<Integer>A) {
@@ -28,19 +31,17 @@ public class D2 {
 		}
 	}
 	
-	int test(int x, int y) {
-		ArrayList<Integer>B = (ArrayList)A.clone();
-		B.set(1, x);B.set(2, y);
-		run(B);
-		return B.get(0);
+	long test(long x, long y) {
+		Prog p = new Prog(program);
+		p.A.set(1, x);p.A.set(2, y);
+		p.run();
+		return p.A.get(0);
 	}
 	void solve() {
-		A = new ArrayList<>();
-		String[]s = scan.nextLine().split(",");
-		for(String ss:s)A.add(Integer.parseInt(ss));
+		program = scan.nextLine();
 		
 		for(int i=0;i<100;i++)for(int j=0;j<100;j++) {
-			int y = test(i,j);
+			long y = test(i,j);
 			if(y==19690720)
 				System.out.println(100*i+j);
 		}

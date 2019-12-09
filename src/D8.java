@@ -1,27 +1,16 @@
-import java.util.*;
+import static java.lang.Math.random;
+import static java.util.Arrays.fill;
+import static java.util.Arrays.stream;
+import static utils.U.flatten;
+import static utils.U.ints;
+import static utils.U.viewAs;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import utils.Images;
-
-import static utils.U.*;
-
-import static java.lang.Math.*; 
-import static java.util.Arrays.*;
-
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-import static java.lang.Character.*;
-import static java.lang.Double.*;
+import utils.Images;
 
 public class D8 {
 

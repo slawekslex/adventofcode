@@ -1,4 +1,7 @@
 import java.util.*;
+
+import utils.Prog;
+
 import static java.lang.Math.*; 
 import static java.util.Arrays.*;
 
@@ -22,8 +25,16 @@ public class D9 {
 	}
 	
 	void solve() {
-
-		
+		String s = readAll();
+		System.out.println(s);
+		Prog p = new Prog(s);
+		p.inputs.add(1L);
+		p.run();
+		System.out.println(p.outputs);
+		 p = new Prog(s);
+		p.inputs.add(2L);
+		p.run();
+		System.out.println(p.outputs);
 	}
 	
 	public static void main(String[] args) {
@@ -33,7 +44,7 @@ public class D9 {
 			me.scan = new Scanner(System.in);
 			if(new File(sample).isFile()) {
 				me.scan = new Scanner(new FileInputStream(sample));
-				System.err.println(new Scanner(new File(sample)).useDelimiter("\\Z").next());
+				//System.err.println(new Scanner(new File(sample)).useDelimiter("\\Z").next());
 			} else {
 				System.err.println("INPUT FILE "+sample+" DOES NOT EXIST");
 			}					
