@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.IntStream;
 
 import utils.Geom;
 
@@ -14,6 +15,22 @@ import static utils.U.*;
 
 public class D10 {
 
+	static class AngleComp implements Comparator<int[]>{
+		int[]o;
+		
+		public AngleComp(int[]origin) {
+			o=origin;
+		}
+		@Override
+		public int compare(int[] o1, int[] o2) {
+			double d1 = angle(o, new int[] {-1000,0}, o1);
+			double d2 = angle(o, new int[] {-1000,0}, o2);
+			if(d1<d2)return -1;
+			if(d1>d2)return 1;
+			return 0;
+		}
+		
+	}
 	Scanner scan = new Scanner(System.in);
 	String readAll() {
 		String res ="";
@@ -25,28 +42,29 @@ public class D10 {
 	}
 	
 	
-	static ArrayList<int[]>vis(ArrayList<int[]>A, int[]a){
-		ArrayList<int[]>res = new ArrayList<>();
-		for(int[]b:A) {
-			if(a==b)continue;
-			boolean vis = true;
-			for(int[]c:A) {
-				if(c==b || c==a)continue;
-				int[]ab = Geom.vect(a,b);
-				int[]ac = Geom.vect(a, c);
-				int crs = Geom.cross(ac, ab);
-				if(Geom.len(ac) < Geom.len(ab) && crs==0 &&signum(ab[0])==signum(ac[0]) && signum(ab[1])==signum(ac[1])) {
-			//		System.out.println(b[0]+", "+b[1]+" is blocked by " +c[0]+","+c[1]);
-					
-					vis=false;
-				}
-			}
-			if(vis) {
-				res.add(b);
+	static ArrayList<Integer>blockedBy(ArrayList<int[]>A, int[]a, int[]c){
+		ArrayList<Integer>res = new ArrayList<>();
+		for(int i=0;i<A.size();i++) {
+			int[]b = A.get(i);
+			if(a==b ||b==c)continue;
+			int[]ab = Geom.vect(a,b);
+			int[]ac = Geom.vect(a, c);
+			int crs = Geom.cross(ac, ab);
+			if(Geom.len(ac) < Geom.len(ab) && crs==0 &&signum(ab[0])==signum(ac[0]) && signum(ab[1])==signum(ac[1])) {
+				res.add(i);
 			}
 		}
-		
 		return res;
+	}
+	
+	static int[] blocked(ArrayList<int[]>A, int[]a){
+		int[]blocked = new int[A.size()];
+		for(int[]c:A) {
+			if(c==a)continue;
+			ArrayList<Integer> B = blockedBy(A,a,c);
+			for(int x:B)blocked[x]++;
+		}
+		return blocked;
 	}
 	
 	static double angle(int[]st, int[]a, int[]b) {
@@ -64,32 +82,36 @@ public class D10 {
 		for ( int i = 0; i < M.length; i++) for (int j = 0; j < M[0].length; j++) {
 			if(M[i][j]=='#')A.add(new int[] {i,j});
 		}
+		System.out.println("ALL: "+A.size());
 		int[]st=null;
 		for(int[]a:A) {
-			int cnt =0;
-			cnt = vis(A,a).size();
+			
+			int[]blo = blocked(A,a);
+			int cnt = (int)Arrays.stream(blo).filter(x->x==0).count() -1;
+			//M[a[0]][a[1]]=(char)('0'+cnt);
 			if(cnt>res) {
 				res =  cnt;
 				st = a;
 			}
 		}
-		ArrayList<int[]> V =vis(A,st); 
+		//for(char[]c:M)System.out.println(new String(c));
+		
 		System.out.println(res);
-		final int[]o = st.clone();
-		Collections.sort(V, new Comparator<int[]>() {
-
-			@Override
-			public int compare(int[] o1, int[] o2) {
-				double d1 = angle(o, new int[] {-1000,0}, o1);
-				double d2 = angle(o, new int[] {-1000,0}, o2);
-				if(d1<d2)return -1;
-				if(d1>d2)return 1;
-				return 0;
+		
+		// PART 2
+		int p=0;
+		while(A.size()>1) {
+			int[] blo = blocked(A,st);
+			ArrayList<int[]> V =new ArrayList<>();
+			for(int i=0;i<blo.length;i++)if(A.get(i)!=st && blo[i]==0)V.add(A.get(i));
+			TreeSet<int[]>T = new TreeSet<>(new AngleComp(st));
+			T.addAll(V);
+			while(!T.isEmpty()) {
+				int[] x = T.pollFirst();
+				p++;
+				System.out.println(p+": "+x[1]+" "+x[0]);
 			}
-		});
-		int[] toPrint = {1,2,3,10,20,50,100,199,200,201};
-		for(int i:toPrint) {
-			System.out.println(V.get(i-1)[1]+" "+V.get(i-1)[0]);
+			for(int[]x:V)A.remove(x);
 		}
 	}
 	void solve() {
@@ -104,6 +126,7 @@ public class D10 {
 			String input =me.getClass().getName()+".txt";
 			String sample = "D10_example.txt";
 			String sample_small = "D10_example_small.txt";
+			String sample_tiny = "D10_example_tiny.txt";
 			me.scan = new Scanner(System.in);
 			if(new File(input).isFile()) {
 				me.scan = new Scanner(new FileInputStream(input));
