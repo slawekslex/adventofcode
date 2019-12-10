@@ -35,6 +35,23 @@ public class U {
 		return ints(s, "[ ,]");
 	}
 	
+	
+	public static char[][] chars(String[]s){
+		char[][]R = new char[s.length][];
+		for (int i = 0; i < R.length; i++) {
+			R[i]=s[i].toCharArray();
+		}
+		return R;
+	}
+	public static char[][] chars(Scanner s){
+		ArrayList<String>A = new ArrayList<>();
+		while(s.hasNext()) {
+			A.add(s.nextLine());
+		}
+		return chars(A.toArray(new String[A.size()]));
+		
+	}
+	
 	public static int[][] viewAs(int[]A, int a, int b){
 		int n = A.length;
 		if(a==-1)a=n/b;
