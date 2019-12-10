@@ -1,4 +1,7 @@
 import java.util.*;
+
+import utils.Geom;
+
 import static java.lang.Math.*; 
 import static java.util.Arrays.*;
 
@@ -22,55 +25,72 @@ public class D10 {
 	}
 	
 	
-	static void solve(char[][]M) {
-		int res=0;
-foo:	for ( int i = 0; i < M.length; i++) for (int j = 0; j < M[0].length; j++) {
-			if(M[i][j]=='.')continue;
-			System.out.println("Counting "+i+" "+j);
-			int cnt = 0;
-			for(int a=0;a<M.length;a++) for(int b=0;b<M[0].length;b++){
-				if(M[a][b]=='.')continue;
-				if(a==i &&b==j)continue;
-				boolean vis=true;
-				for(int c=0;c<M.length;c++) for(int d=0;d<M[0].length;d++){
-					if(M[c][d]=='.')continue;
-					if(c==i &&d==j)continue;
-					if(c==a &&d==b)continue;
-					int dx = c-i;int dy=d-j;
-					int ddx = a-i;int ddy=b-j;
-					if(abs(dx)>abs(ddx) || abs(dy)>abs(ddy))continue;
-					if(signum(ddy)!=signum(dy) || signum(ddx)!=signum(dx))continue;
-					if(dy==0) {
-						if(ddy==0) {
-							vis=false;
-							System.out.format("(%d,%d) is blocking (%d, %d)\n", dx,dy, ddx,ddy);
-						}
-							
-					}
-					else if(dx==0) {
-						if(ddx==0) {
-							vis=false;
-							System.out.format("(%d,%d) is blocking (%d, %d)\n", dx,dy, ddx,ddy);
-						}
-					}
-					else if(ddx*dy ==ddy*dx) {
-						System.out.format("(%d,%d) is blocking (%d, %d)\n", dx,dy, ddx,ddy);
-						vis=false;
-					}
-						
-				}
-				if(vis) {
-					cnt++;
-					System.out.println("adding "+a+" "+b);
+	static ArrayList<int[]>vis(ArrayList<int[]>A, int[]a){
+		ArrayList<int[]>res = new ArrayList<>();
+		for(int[]b:A) {
+			if(a==b)continue;
+			boolean vis = true;
+			for(int[]c:A) {
+				if(c==b || c==a)continue;
+				int[]ab = Geom.vect(a,b);
+				int[]ac = Geom.vect(a, c);
+				int crs = Geom.cross(ac, ab);
+				if(Geom.len(ac) < Geom.len(ab) && crs==0 &&signum(ab[0])==signum(ac[0]) && signum(ab[1])==signum(ac[1])) {
+			//		System.out.println(b[0]+", "+b[1]+" is blocked by " +c[0]+","+c[1]);
+					
+					vis=false;
 				}
 			}
-			res = max(res,cnt);
-			M[i][j] = (char)('0'+cnt);
-			System.out.println("----------");
-			//break foo;
+			if(vis) {
+				res.add(b);
+			}
 		}
-		for(char[]c:M)System.out.println(new String(c));
+		
+		return res;
+	}
+	
+	static double angle(int[]st, int[]a, int[]b) {
+		int[]v1 = Geom.vect(st, b);
+		int[]v2 = Geom.vect(st, a);
+		double foo = Geom.dot(v1, v2)/Geom.len(v1)/Geom.len(v2);
+		double res =Math.acos(foo)*180/Math.PI;
+		if(Geom.cross(v1, v2)<0)res = 360-res;
+		return res; 
+	}
+	
+	static void solve(char[][]M) {
+		int res=0;
+		ArrayList<int[]>A = new ArrayList<>();;
+		for ( int i = 0; i < M.length; i++) for (int j = 0; j < M[0].length; j++) {
+			if(M[i][j]=='#')A.add(new int[] {i,j});
+		}
+		int[]st=null;
+		for(int[]a:A) {
+			int cnt =0;
+			cnt = vis(A,a).size();
+			if(cnt>res) {
+				res =  cnt;
+				st = a;
+			}
+		}
+		ArrayList<int[]> V =vis(A,st); 
 		System.out.println(res);
+		final int[]o = st.clone();
+		Collections.sort(V, new Comparator<int[]>() {
+
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				double d1 = angle(o, new int[] {-1000,0}, o1);
+				double d2 = angle(o, new int[] {-1000,0}, o2);
+				if(d1<d2)return -1;
+				if(d1>d2)return 1;
+				return 0;
+			}
+		});
+		int[] toPrint = {1,2,3,10,20,50,100,199,200,201};
+		for(int i:toPrint) {
+			System.out.println(V.get(i-1)[1]+" "+V.get(i-1)[0]);
+		}
 	}
 	void solve() {
 		char[][]M =chars(scan);
@@ -79,22 +99,17 @@ foo:	for ( int i = 0; i < M.length; i++) for (int j = 0; j < M[0].length; j++) {
 	
 	public static void main(String[] args) {
 		D10 me = new D10();
-		String[]s = new String[] {
-				".#..#",
-				".....",
-				"#####",
-				"....#",
-				"...##",
-		};
-		//solve(chars(s));
+		
 		try{
-			String sample =me.getClass().getName()+".txt";
+			String input =me.getClass().getName()+".txt";
+			String sample = "D10_example.txt";
+			String sample_small = "D10_example_small.txt";
 			me.scan = new Scanner(System.in);
-			if(new File(sample).isFile()) {
-				me.scan = new Scanner(new FileInputStream(sample));
+			if(new File(input).isFile()) {
+				me.scan = new Scanner(new FileInputStream(input));
 				//System.err.println(new Scanner(new File(sample)).useDelimiter("\\Z").next());
 			} else {
-				System.err.println("INPUT FILE "+sample+" DOES NOT EXIST");
+				System.err.println("INPUT FILE "+input+" DOES NOT EXIST");
 			}					
 		}catch (Exception e) {
 			System.err.println(e);
