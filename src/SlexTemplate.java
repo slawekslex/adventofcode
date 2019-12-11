@@ -12,17 +12,9 @@ import static utils.U.*;
 public class SlexTemplate {
 
 	Scanner scan = new Scanner(System.in);
-	String readAll() {
-		String res ="";
-		while(scan.hasNext()) {
-			String s = scan.nextLine();
-			res+=s;
-		}
-		return res;
-	}
+
 	
 	void solve() {
-
 		
 	}
 	

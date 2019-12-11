@@ -77,6 +77,11 @@ public class Prog {
 				write(cm, a*b);
 			}
 			if (op == 3) {
+				if(inputs.size()==0) {
+					System.err.println("NO INPUTS");
+					p--;
+					return HALT;
+				}
 				long x = input();
 				write(am,x);
 			}

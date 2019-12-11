@@ -26,7 +26,23 @@ import static java.lang.Double.*;
 
 public class U {
 	
-	
+	public static String readAll(Scanner scan) {
+		String res ="";
+		while(scan.hasNext()) {
+			String s = scan.nextLine();
+			res+=s;
+		}
+		return res;
+	}
+	public static String readAll(Scanner scan, String delim) {
+		String res ="";
+		while(scan.hasNext()) {
+			String s = scan.nextLine();
+			if(res.length()>0)res+=delim;
+			res+=s;
+		}
+		return res;
+	}
 	public static int[] ints(String s, String delim) {
 		String[]ss = s.split(delim);
 		return stream(ss).mapToInt(x->parseInt(x)).toArray();

@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Images {
+	public static int white = argb(255, 255, 255);
+	public static int black = argb(0, 0, 0);
 	public static int[][] bwToARGB(int[][] pixels){
 		int[][]r = new int[pixels.length][pixels[0].length];
 		for (int i = 0; i < pixels.length; i++) {
@@ -45,11 +47,11 @@ public class Images {
                 e.getWindow().dispose();
             }
         });
-		frame.setSize(512, 512);
+		frame.setSize(1024, 1024);
 		JPanel jp = new JPanel() {
 				public void paint(Graphics g) {
 					int m = max(bi.getWidth(), bi.getHeight());
-					int scale = 512/m;
+					int scale = 1024/m;
 					g.drawImage(bi.getScaledInstance(bi.getWidth()*scale, bi.getHeight()*scale,Image.SCALE_SMOOTH),0,0,Color.WHITE,null);
 				}
 		};
