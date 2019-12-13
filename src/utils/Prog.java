@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 public class Prog {
 	public static int HALT = Integer.MIN_VALUE;
+	public static int INPUT = Integer.MIN_VALUE+1;
 	public ArrayList<Long> A;
 	int p=0;
 	long base =0;
@@ -80,7 +81,7 @@ public class Prog {
 				if(inputs.size()==0) {
 					System.err.println("NO INPUTS");
 					p--;
-					return HALT;
+					return INPUT;
 				}
 				long x = input();
 				write(am,x);
