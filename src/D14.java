@@ -38,9 +38,9 @@ public class D14 {
 		left[h] += le;
 
 		for (int j = 0; j < gm[h].length; j += 2) {
-			for (int k = 0; k < num; k++) {
-				r += get(gm[h][j], gm[h][j + 1], left);
-			}
+
+				r += get(gm[h][j]*num, gm[h][j + 1], left);
+
 		}
 		
 
@@ -81,6 +81,7 @@ public class D14 {
 		while(true) {
 			s++;
 			int o = get(1, ID.get("FUEL"), left);
+			
 			if(o>ore)break;
 			ore-=o;
 			f++;
