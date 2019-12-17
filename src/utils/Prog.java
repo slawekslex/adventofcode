@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Prog {
 	public static int HALT = Integer.MIN_VALUE;
 	public static int INPUT = Integer.MIN_VALUE+1;
+	public static int ALL_STEP = Integer.MIN_VALUE+2;
 	public ArrayList<Long> A;
 	int p=0;
 	long base =0;
@@ -18,14 +19,14 @@ public class Prog {
 
 	public Prog(ArrayList<Long> A) {
 		this.A = (ArrayList<Long>)A.clone();
-		for(int i=0;i<1000;i++)this.A.add(0L);
+		for(int i=0;i<10000;i++)this.A.add(0L);
 	}
 	
 	public Prog(String s){
 		A = new ArrayList<>();
 		for (String ss : s.split(","))
 			A.add(Long.parseLong(ss));
-		for(int i=0;i<1000;i++)this.A.add(0L);
+		for(int i=0;i<10000;i++)this.A.add(0L);
 	}
 	
 	public long input() {
@@ -45,6 +46,22 @@ public class Prog {
 		return x;
 	}
 	
+	public void printASCII() {
+		String s ="";
+		for(long x:outputs) {
+			if(x<300)
+				s+=(char)x;
+			else s+= "<"+x+">";
+		}
+		String[]ss =s.split("\n");
+		for(String x:ss)System.out.println(x);
+	}
+	
+	public void feedASCII(String s) {
+		if(s.length()>21)throw new RuntimeException("Too long");
+		for(char c:s.toCharArray())inputs.add(c+0L);
+	}
+	
 	public void write(long mode, long x) {
 		if(mode==1)throw new RuntimeException("Writing wit mode 1");
 		long a = A.get(p++);
@@ -56,8 +73,13 @@ public class Prog {
 		}
 	}
 	
+	
 	public long run() {
-		while (true) {
+		return run(Long.MAX_VALUE);
+	}
+	
+	public long run(long steps) {
+		for(int step =0 ;step<steps;step++) {
 			long cd = A.get(p++);
 			long op = cd % 100;
 			long am = (cd / 100) % 10;
@@ -119,6 +141,7 @@ public class Prog {
 				base +=a;
 			}
 		}
+		return ALL_STEP;
 	}
 
 	
