@@ -26,6 +26,12 @@ import static java.lang.Double.*;
 
 public class U {
 	
+	public static void clrs() {
+		char ESC = 27;
+	  	System.out.print(ESC + "[2J");
+		System.out.print(ESC + "[1;1H");
+	}
+
 	public static String readAll(Scanner scan) {
 		String res ="";
 		while(scan.hasNext()) {

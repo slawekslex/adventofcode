@@ -32,6 +32,9 @@ public class SlexTemplate {
 		}catch (Exception e) {
 			System.err.println(e);
 		}
+		long time = System.currentTimeMillis();
 		me.solve();
+		time = System.currentTimeMillis() - time;
+		System.err.format("time: %.2fs\n",time/1000.0);
 	}
 }

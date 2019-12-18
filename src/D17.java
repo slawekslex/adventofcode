@@ -7,6 +7,7 @@ import static java.util.Arrays.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigInteger;
 
 import static java.lang.Character.*;
 import static java.lang.Double.*;
@@ -140,6 +141,11 @@ public class D17 {
 	
 	public static void main(String[] args) {
 		D17 me = new D17();
+		BigInteger bi=BigInteger.ONE;
+		for(int i=2;i<27;i++) {
+			bi=bi.multiply(BigInteger.valueOf(i));
+			System.out.println(bi + " "+bi.toString().length());
+		}
 		try{
 			String sample =me.getClass().getName()+".txt";
 			me.scan = new Scanner(System.in);
@@ -152,6 +158,6 @@ public class D17 {
 		}catch (Exception e) {
 			System.err.println(e);
 		}
-		me.solve();
+		me.solve2();
 	}
 }
