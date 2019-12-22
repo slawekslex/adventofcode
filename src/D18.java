@@ -174,7 +174,8 @@ public class D18 {
 		
 		return -1;
 	}
-	
+	double totalCand=0;
+	double candN=0;
 int doit(char cur, int keys) {
 		
 		HashMap<Integer, Integer>best=new HashMap<>();
@@ -183,9 +184,14 @@ int doit(char cur, int keys) {
 		HashSet<Integer>vis = new HashSet<>();
 		while(!Q.isEmpty()) {
 			St s = Q.remove();
-			if(s.keys == (1<<keyCount)-1)return s.step;
+			if(s.keys == (1<<keyCount)-1) {
+				System.out.println(totalCand / candN +" out of "+candN);
+				return s.step;
+			}
 			vis.add(s.hash());
 			ArrayList<int[]> r = cand(s.cur, s.keys);
+			totalCand+=r.size();
+			candN +=1;
 			for(int[]rr:r) {
 				char p =(char)rr[0];
 				int st =rr[1] +s.step;
@@ -215,15 +221,16 @@ int doit(char cur, int keys) {
 		System.out.println(H.size());
 		System.out.println(M.length+" "+M[0].length);
 	
-		System.out.println(doit2());
-		//System.out.println(doit('@',0));
+		//System.out.println(doit2());
+		System.out.println(doit('@',0));
 	
 	}
 	
 	public static void main(String[] args) {
 		D18 me = new D18();
 		try{
-			String sample ="D18_2.txt";//me.getClass().getName()+".txt";
+			//String sample ="D18_2.txt";
+			String sample =me.getClass().getName()+".txt";
 			me.scan = new Scanner(System.in);
 			if(new File(sample).isFile()) {
 				me.scan = new Scanner(new FileInputStream(sample));
