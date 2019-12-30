@@ -4,6 +4,7 @@ import static java.util.Arrays.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigInteger;
 
 import static java.lang.Character.*;
 import static java.lang.Double.*;
@@ -13,113 +14,87 @@ public class D22 {
 
 	Scanner scan = new Scanner(System.in);
 
-	//int[]A;
-	long N = 119315717514047L;
-	/*
-	void deal_into() {
-		long n_at_pos=-1;
-		int a = 0;int b = A.length-1;
-		while(a<b) {
-			if(at_pos==b)n_at_pos=a;
-			if(at_pos==a)n_at_pos=b;
-			int t = A[a];A[a]=A[b];A[b]=t;
-			a++;b--;
-		}
-		at_pos = n_at_pos;
+	
+	long N = 10;
+	long K = 1;
+	BigInteger BIN;
+	
+	long[] deal_into() {
+		return new long[]{N-1, N-1};//-1 * pos + N-1;
 	}
 	
-    void cut(int n) {
-    	long n_at_pos=-1;
-   
-    	if(n<0) {
-    		n=A.length+n;
-    	}
-    	int[]B = new int[A.length];
-    	int st = A.length-n;
-    	for(int i=0;i<n;i++) {
-    		if(i==at_pos)n_at_pos=st;
-    		B[st++]=A[i];
-    		
-    	}
-    	st=0;
-    	for(int i=n;i<A.length;i++) {
-    		if(i==at_pos)n_at_pos=st;
-    		B[st++]=A[i];
-    	}
-    	A=B;
-    	at_pos = n_at_pos;
+	long[] cut(long n) {
+    	return new long[] {1, N-n};//pos+N-n;
     }
-    void increment(int n) {
-    	long n_at_pos=-1;
-    	int[]B = new int[A.length];
-    	int p=0;
-    	for(int i=0;i<A.length;i++) {
-    		if(i==at_pos)n_at_pos=p;
-    		B[p]=A[i];
-    		p = (p+n)%A.length;
-    	}
-    	A=B;
-    	at_pos = n_at_pos;
-    }*/
-	void deal_into() {
-		at_pos = N-at_pos-1;
-	}
+	long[] increment(long n) {
+    	return new long[] {n, 0};//n*pos;
+    }
 	
-    void cut(long x) {
-    	if(x<0) {
-    		x=N+x;
-    	}
-    	long st = N-x;
-    	
-    	if(at_pos<x)
-    		at_pos =st+at_pos; 
-    	else {
-    		at_pos = at_pos-x;
-    	}
-    }
-    void increment(int n) {
-    	at_pos=(at_pos*n)%N;
-    }
-   
-	long at_pos;
 
+	BigInteger[] shuf_coef(String[]com) {
+		BigInteger a = BigInteger.ONE;BigInteger b =BigInteger.ZERO;
+    	for (String s : com) {
+    		long[]f= {0,0};
+			if (s.contains("into")) {
+				f = deal_into();
+
+			}
+			if (s.contains("with")) {
+				String[] p = s.split(" ");
+				int x = Integer.parseInt(p[p.length - 1]);
+				f = increment(x);
+
+			}
+			if (s.contains("cut")) {
+				String[] p = s.split(" ");
+				int x = Integer.parseInt(p[p.length - 1]);
+				f = cut(x);
+			}
+			a = a.multiply(BigInteger.valueOf(f[0])).mod(BIN);//(a*f[0])%N;
+			b = b.multiply(BigInteger.valueOf(f[0])).add(BigInteger.valueOf(f[1])).mod(BIN);//(b*f[0]+f[1])%N;
+    	}
+    	return new BigInteger[] {a,b};
+	}
+	
+	long shuffle(String[]com, long pos) {
+		BigInteger[]f = shuf_coef(com);
+		BigInteger a = f[0];BigInteger b = f[1];
+		BigInteger P = BigInteger.valueOf(pos).multiply(a).add(b).mod(BIN);
+    	return P.longValue();
+    }
+    
+    void part1(String[]com, int card) {
+    	N = 10007;
+    	BIN = BigInteger.valueOf(N);
+    	System.out.println(shuffle(com, card));
+    }
+    
+    
+    void p2_forward(String[]com, long pos) {
+    	N = 119315717514047L;
+    	K =101741582076661L;
+    	BIN = BigInteger.valueOf(N);
+    	BigInteger[]f = shuf_coef(com);
+    	f = repeat(f[0], f[1], K);
+    	BigInteger a = f[0];BigInteger b = f[1];
+    	BigInteger P = BigInteger.valueOf(pos).add(BIN).add(b.multiply(BigInteger.valueOf(-1))).multiply(a.modInverse(BIN)).mod(BIN);
+    	System.out.println(P);
+    }
+    
+    BigInteger[] repeat(BigInteger a, BigInteger b, long k) {
+    	BigInteger ra = a.modPow(BigInteger.valueOf(k), BIN);
+    	BigInteger rb=BigInteger.ZERO;
+    	rb = a.modPow(BigInteger.valueOf(k),BIN).add(BigInteger.valueOf(N-1)); // (r^N-1) / (r-1)
+    	BigInteger denom = a.add(BigInteger.valueOf(N-1)).modInverse(BIN);
+    	rb= rb.multiply(denom);
+    	rb = rb.multiply(b).mod(BIN);
+    	return new BigInteger[] {ra,rb};
+    }
+    
 	void solve() {
-	//	A = A = new int[10007];
-	//	for(int i=0;i<A.length;i++)A[i]=i;
 		String[]com = readAll(scan,"\n").split("\n");
-			/*{
-					"cut 6",
-					"deal with increment 7",
-					"deal into new stack",	
-			};*/
-		at_pos=2020;
-		HashSet<Long>vis = new HashSet<>();
-		for (long it = 0;; it++) {
-			for (String s : com) {
-				if (s.contains("into")) {
-					deal_into();
-
-				}
-				if (s.contains("with")) {
-					String[] p = s.split(" ");
-					int x = Integer.parseInt(p[p.length - 1]);
-					increment(x);
-
-				}
-				if (s.contains("cut")) {
-					String[] p = s.split(" ");
-					int x = Integer.parseInt(p[p.length - 1]);
-					cut(x);
-				}
-
-			}
-			if (vis.contains(at_pos)) {
-				System.out.println("Cycle at " + (it + 1));
-				break;
-			}
-			vis.add(at_pos);
-		}
-		System.out.println(at_pos);
+		part1(com,2019);
+		p2_forward(com,2020);
 	}
 	
 	public static void main(String[] args) {
