@@ -101,7 +101,7 @@ public class Prog {
 			}
 			if (op == 3) {
 				if(inputs.size()==0) {
-					System.err.println("NO INPUTS");
+				//	System.err.println("NO INPUTS");
 					p--;
 					return INPUT;
 				}
