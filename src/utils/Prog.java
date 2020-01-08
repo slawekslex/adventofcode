@@ -55,10 +55,11 @@ public class Prog {
 		}
 		String[]ss =s.split("\n");
 		for(String x:ss)System.out.println(x);
+		outputs.clear();
 	}
 	
 	public void feedASCII(String s) {
-		if(s.length()>21)throw new RuntimeException("Too long");
+		//if(s.length()>21)throw new RuntimeException("Too long");
 		for(char c:s.toCharArray())inputs.add(c+0L);
 	}
 	
